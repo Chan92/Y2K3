@@ -5,7 +5,7 @@ using UnityEngine;
 public class PathFinding:MonoBehaviour {
 	private Grid myGrid;
 	List<Node> openSet = new List<Node>();
-	HashSet<Node> closedSet = new HashSet<Node>();
+	
 
 	public Transform seeker, target;
 
@@ -19,9 +19,10 @@ public class PathFinding:MonoBehaviour {
 	}
 
 	private void FindPath (Vector3 startPos, Vector3 targetPos){
-		print("found path, A:" + startPos + " - B:" + targetPos);
+		//print("found path, A:" + startPos + " - B:" + targetPos);
 		Node startNode = myGrid.GetNodeFromWorldPoint(startPos);
 		Node targetNode = myGrid.GetNodeFromWorldPoint(targetPos);
+		HashSet<Node> closedSet = new HashSet<Node>();
 
 		openSet.Add(startNode);
 
@@ -112,8 +113,9 @@ public class PathFinding:MonoBehaviour {
 
 		path.Reverse();
 		myGrid.path = path;
-		StopCoroutine(FollowPath(path));
-		StartCoroutine(FollowPath(path));
+
+		//StopCoroutine(FollowPath(path));
+		//StartCoroutine(FollowPath(path));
 	}
 
 	//testing
@@ -121,7 +123,7 @@ public class PathFinding:MonoBehaviour {
 		while(path.Count > 1) {
 			seeker.position = path[0].worldPosition;
 			path.RemoveAt(0);
-			yield return new WaitForSeconds(1.2f);
+			yield return new WaitForSeconds(0.7f);
 		}
 	}
 }
