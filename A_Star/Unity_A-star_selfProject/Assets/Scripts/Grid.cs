@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grit : MonoBehaviour{
+public class Grid : MonoBehaviour{
 	[SerializeField]
 	private LayerMask unwalkableMask;
 	[SerializeField]
@@ -10,9 +10,12 @@ public class Grit : MonoBehaviour{
 	[SerializeField]
 	private float nodeRadius;
 
-	private Node[,] grid;
+	[HideInInspector]
+	public Node[,] grid;
 	private float nodeDiameter;
-	private Vector2Int gridSize;
+
+	[HideInInspector]
+	public Vector2Int gridSize;
 
 	private void Start() {
 		nodeDiameter = nodeRadius * 2;
@@ -31,7 +34,7 @@ public class Grit : MonoBehaviour{
 				Vector3 worldPoint = worldBottomLeft +
 					Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
 				bool walkable = !(Physics.CheckBox(worldPoint, Vector3.one * nodeRadius, Quaternion.identity, unwalkableMask));
-				grid[x, y] = new Node(worldPoint, walkable);
+				grid[x, y] = new Node(worldPoint, walkable, new Vector2Int(x, y));
 			}
 		}
 	}
@@ -50,12 +53,17 @@ public class Grit : MonoBehaviour{
 		return grid[x, y];
 	}
 
+	public List<Node> path;
 	private void OnDrawGizmos() {
 		Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
 		if(grid != null) {
 			foreach(Node n in grid) {
 				Gizmos.color = (n.walkable) ? Color.white : Color.red;
+				if(path != null) {
+					if(path.Contains(n))
+						Gizmos.color = Color.black;
+				}
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter - 0.1f));
 			}
 		}
