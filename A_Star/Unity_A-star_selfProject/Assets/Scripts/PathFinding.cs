@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PathFinding:MonoBehaviour {
 	private Grid myGrid;
-	List<Node> openSet = new List<Node>();
+	HashSet<Node> closedSet;
+	List<Node> openSet;
 	
 
 	public Transform seeker, target;
@@ -14,7 +15,7 @@ public class PathFinding:MonoBehaviour {
 	}
 
 	private void Update() {
-		if(Input.GetKeyDown(KeyCode.Space))
+		//if(Input.GetKeyDown(KeyCode.Space))
 			FindPath(seeker.position, target.position);
 	}
 
@@ -22,7 +23,8 @@ public class PathFinding:MonoBehaviour {
 		//print("found path, A:" + startPos + " - B:" + targetPos);
 		Node startNode = myGrid.GetNodeFromWorldPoint(startPos);
 		Node targetNode = myGrid.GetNodeFromWorldPoint(targetPos);
-		HashSet<Node> closedSet = new HashSet<Node>();
+		closedSet = new HashSet<Node>();
+		openSet = new List<Node>();
 
 		openSet.Add(startNode);
 
